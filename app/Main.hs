@@ -3,4 +3,4 @@ module Main where
 import Calculator.Lexer
 
 main :: IO ()
-main = interact strip
+main = putStrLn "It works, so are we done yet?"

@@ -1,6 +1,6 @@
-module Calculator.Lexer (strip)  where
+module Calculator.Lexer (tokenize) where
 
-import Data.Char
+data Token
 
-strip :: String -> String
-strip = dropWhile isSpace . reverse . dropWhile isSpace . reverse
+tokenize :: String -> [Token]
+tokenize = undefined
