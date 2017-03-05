@@ -2,6 +2,7 @@ module Calculator.Lexer
 (
   Token(..),
   showContent,
+  operator,
   tokenize
 ) where
 
@@ -23,6 +24,12 @@ opToStr Plus  = "+"
 opToStr Minus = "-"
 opToStr Times = "*"
 opToStr Div   = "/"
+
+operator :: Char -> Operator
+operator c | c == '+' = Plus
+           | c == '-' = Minus
+           | c == '*' = Times
+           | c == '/' = Div
 
 tokenize :: String -> [Token]
 tokenize = undefined
