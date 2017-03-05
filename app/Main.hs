@@ -3,4 +3,4 @@ module Main where
 import Calculator.Lexer
 
 main :: IO ()
-main = print $ tokenize " 1 + 4 / x "
+main = print $ deSpace $ tokenize " 1 + 4 / x "

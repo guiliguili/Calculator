@@ -1,8 +1,6 @@
 module Calculator.Lexer
 (
-  Token(..),
-  showContent,
-  operator,
+  deSpace,
   tokenize
 ) where
 
@@ -14,6 +12,7 @@ data Operator = Plus | Minus | Times | Div
 data Token = TokOp Operator
               | TokIdent String
               | TokNum Int
+              | TokSpace
                deriving (Show, Eq)
 -- show
 showContent :: Token -> String
@@ -34,9 +33,14 @@ operator c | c == '+' = Plus
            | c == '/' = Div
 
 tokenize :: String -> [Token]
-tokenize [] = []
-tokenize (c : cs) | elem c "+-*/" = TokOp (operator c) : tokenize cs
-                  | isDigit c  = TokNum (digitToInt c) : tokenize cs
-                  | isAlpha c  = TokIdent [c]          : tokenize cs
-                  | isSpace c  = tokenize cs
-                  | otherwise  = error $ "Cannot tokenize " ++ [c]
+tokenize = map tokenizeChar
+
+tokenizeChar :: Char -> Token
+tokenizeChar c | elem c "+-*/" = TokOp (operator c)
+               | isDigit c  = TokNum (digitToInt c)
+               | isAlpha c  = TokIdent [c]
+               | isSpace c  = TokSpace
+               | otherwise  = error $ "Cannot tokenize " ++ [c]
+
+deSpace :: [Token] -> [Token]
+deSpace = filter (\t -> t /= TokSpace)
