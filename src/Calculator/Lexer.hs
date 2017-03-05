@@ -6,6 +6,8 @@ module Calculator.Lexer
   tokenize
 ) where
 
+import Data.Char
+
 data Operator = Plus | Minus | Times | Div
     deriving (Show, Eq)
 
@@ -32,4 +34,9 @@ operator c | c == '+' = Plus
            | c == '/' = Div
 
 tokenize :: String -> [Token]
-tokenize = undefined
+tokenize [] = []
+tokenize (c : cs) | elem c "+-*/" = TokOp (operator c) : tokenize cs
+                  | isDigit c  = TokNum (digitToInt c) : tokenize cs
+                  | isAlpha c  = TokIdent [c]          : tokenize cs
+                  | isSpace c  = tokenize cs
+                  | otherwise  = error $ "Cannot tokenize " ++ [c]
