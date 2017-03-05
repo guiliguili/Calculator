@@ -1,4 +1,7 @@
-module Calculator.Evaluator(evaluate) where
+module Calculator.Evaluator
+(
+  evaluat
+) where
 
 import Calculator.Parser
 

@@ -1,4 +1,7 @@
-module Calculator.Parser(parse) where
+module Calculator.Parser
+(
+  parse
+) where
 
 import Calculator.Lexer
 
