@@ -1,6 +1,6 @@
 module Calculator.Evaluator
 (
-  evaluat
+  evaluate
 ) where
 
 import Calculator.Parser

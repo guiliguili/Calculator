@@ -3,4 +3,13 @@ module Main where
 import Calculator.Lexer
 
 main :: IO ()
-main = print $ deSpace $ tokenize " 1 + 4 / x "
+main = do
+  str <- getLine
+  do
+    if null str
+     then
+        return ()
+     else
+        do
+          print $ tokenize str
+          main

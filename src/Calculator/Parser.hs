@@ -1,6 +1,7 @@
 module Calculator.Parser
 (
-  parse
+  parse,
+  Expression
 ) where
 
 import Calculator.Lexer
