@@ -1,8 +1,7 @@
 module Calculator.Lexer
 (
   tokenize,
-  Token,
-  alnums
+  Token
 ) where
 
 import Data.Char
@@ -32,32 +31,14 @@ operator c | c == '+' = Plus
            | c == '*' = Times
            | c == '/' = Div
 
-alnums :: String -> (String, String)
-alnums str = als "" str
-  where
-    als acc [] = (acc, [])
-    als acc (c : cs) | isAlphaNum c =
-                           let (acc', cs') = als acc cs
-                           in (c : acc', cs')
-                     | otherwise = (acc, c : cs)
+identifier :: Char -> String -> [Token]
+identifier c cs = let (str, cs') = span isAlphaNum cs in
+                  TokIdent (c:str) : tokenize cs'
 
-
-digits ::  String -> (String, String)
-digits str = digs "" str
-  where
-    digs acc [] = (acc, [])
-    digs acc (c : cs) | isDigit c =
-                          let (acc', cs') = digs acc cs
-                          in (c : acc', cs')
-                       | otherwise = (acc, c : cs)
-
-identifier c cs =
-  let (str, cs') = alnums cs
-  in TokIdent (c:str) : tokenize cs'
-
+number :: Char -> String -> [Token]
 number c cs =
-  let (digs, cs') = digits cs
-  in TokNum (read (c : digs)) : tokenize cs'
+   let (digs, cs') = span isDigit cs in
+   TokNum (read (c : digs)) : tokenize cs'
 
 tokenize ::  String -> [Token]
 tokenize [] = []
