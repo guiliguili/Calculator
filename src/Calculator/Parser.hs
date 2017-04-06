@@ -1,7 +1,7 @@
 module Calculator.Parser
 (
   parse,
-  Tree
+  Tree(..)
 ) where
 
 import Calculator.Lexer

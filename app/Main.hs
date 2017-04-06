@@ -2,6 +2,7 @@ module Main where
 
 import Calculator.Lexer
 import Calculator.Parser
+import Calculator.Evaluator
 
 main :: IO ()
 main = do
@@ -12,5 +13,5 @@ main = do
         return ()
      else
         do
-          print $ parse $ tokenize str
+          print $ evaluate $ parse $ tokenize str
           main
