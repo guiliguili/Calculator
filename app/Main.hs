@@ -1,6 +1,7 @@
 module Main where
 
 import Calculator.Lexer
+import Calculator.Parser
 
 main :: IO ()
 main = do
@@ -11,5 +12,5 @@ main = do
         return ()
      else
         do
-          print $ tokenize str
+          print $ parse $ tokenize str
           main

@@ -5,5 +5,5 @@ module Calculator.Evaluator
 
 import Calculator.Parser
 
-evaluate :: Expression -> Double
+evaluate :: Tree -> Double
 evaluate = undefined
