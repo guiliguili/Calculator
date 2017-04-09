@@ -19,7 +19,11 @@ loop symTab = do
     let
       toks = tokenize str
       tree = parse toks
-      (val, symTab') = evaluate tree symTab
-    in do
-      print val
-      loop symTab'
+    in
+      case evaluate tree symTab of
+        Ev (Left msg) -> do
+          putStrLn $ "Error: " ++ msg
+          loop symTab
+        Ev (Right (v, symTab')) -> do
+          print v
+          loop symTab
