@@ -1,4 +1,4 @@
-module Data.String.StripSpec (main, spec) where
+module Calculator.StripSpec (main, spec) where
 
 import Test.Hspec
 import Test.QuickCheck
