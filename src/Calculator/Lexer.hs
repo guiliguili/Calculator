@@ -39,13 +39,14 @@ operator c
   | c == '/' = Div
 
 identifier :: Char -> String -> [Token]
-identifier c cs = let (str, cs') = span isAlphaNum cs in
-                  TokIdent (c:str) : tokenize cs'
+identifier c cs =
+  let (str, cs') = span isAlphaNum cs
+  in  TokIdent (c:str) : tokenize cs'
 
 number :: Char -> String -> [Token]
 number c cs =
-   let (digs, cs') = span isDigit cs in
-   TokNum (read (c : digs)) : tokenize cs'
+   let (digs, cs') = span isDigit cs
+   in  TokNum (read (c : digs)) : tokenize cs'
 
 tokenize ::  String -> [Token]
 tokenize [] = []
