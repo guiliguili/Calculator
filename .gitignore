@@ -3,5 +3,6 @@
 *.iml
 *.iws
 
-/.stack-work/
-/out/
+.stack-work/
+out/
+haskell-calculator.cabal
