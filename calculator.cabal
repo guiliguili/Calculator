@@ -45,4 +45,4 @@ test-suite calculator-test
 
 source-repository head
   type:     git
-  location: https://github.com/guiliguili/calculator
+  location: https://github.com/guiliguili/haskell-calculator
