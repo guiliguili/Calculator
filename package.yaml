@@ -1,0 +1,49 @@
+name:                haskell-calculator
+version:             0.1.0.0
+github:              "guiliguili/haskell-calculator"
+license:             BSD3
+author:              "Guillaume Lasnier"
+maintainer:          "guillaume.lasnier@me.com"
+copyright:           "(c) 2020 Guillaume Lasnier"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            This demonstrates how to implement a simple Calculator with Haskell.
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/guiliguili/haskell-calculator#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- containers
+
+library:
+  source-dirs: src
+
+executables:
+  haskell-calculator-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - haskell-calculator
+
+tests:
+  haskell-calculator-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - haskell-calculator
