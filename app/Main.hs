@@ -7,8 +7,7 @@ import Calculator.Parser
 import Calculator.Evaluator
 
 main :: IO ()
-main = do
-  loop (M.fromList [("pi", pi)])
+main = loop (M.fromList [("pi", pi)])
 
 loop symTab = do
   str <- getLine
