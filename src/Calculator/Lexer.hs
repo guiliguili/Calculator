@@ -19,12 +19,6 @@ data Token = TokOp Operator
            | TokEnd
     deriving (Show, Eq)
 
--- show
-showContent :: Token -> String
-showContent (TokOp op) = opToStr op
-showContent (TokIdent str) = str
-showContent (TokNum i) = show i
-
 opToStr :: Operator -> String
 opToStr Plus  = "+"
 opToStr Minus = "-"
