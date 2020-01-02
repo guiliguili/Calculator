@@ -14,8 +14,8 @@ type SymTab = M.Map String Double
 newtype Evaluator a = Ev (Either String a)
 
 instance (Show a) => Show (Evaluator a) where
-  show (Ev (Left msg)) = concat ["Ev(Left", " ", msg, ")"]
-  show (Ev (Right v))  = concat ["Ev(Right", " ", show v, ")"]
+  show (Ev (Left msg)) = "Error: " ++ msg
+  show (Ev (Right v))  = "Evaluation: " ++ show v
 
 instance Functor Evaluator where
   fmap f (Ev (Left msg)) = Ev (Left msg)
