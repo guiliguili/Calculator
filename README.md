@@ -28,10 +28,12 @@ You can also interactively test lower level function from GHCi as follow :
 ```bash
 $ stack ghci
 [...]
-*Main Calculator.Evaluator Calculator.Lexer Calculator.Misc Calculator.Parser> parse tokenize "1+2"
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> tokenize "1+2"
 [TokNum 1.0,TokOp Plus,TokNum 2.0]
- *Main Calculator.Evaluator Calculator.Lexer Calculator.Misc Calculator.Parser> parse $ tokenize "1+2"
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> parse $ tokenize "1+2"
 SumNode Plus (NumNode 1.0) (NumNode 2.0)
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> evaluate (parse $ tokenize "a = 1+2") M.empty
+Evaluation: (3.0,fromList [("a",3.0)])
 ```
 
 ## Testing
