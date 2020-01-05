@@ -21,11 +21,11 @@ instance Functor Evaluator where
 
 instance Applicative Evaluator where
   pure v = Ev $ \symtab -> (v, symtab)
-  (Ev f) <*> (Ev v)  = Ev $
+  Ev f <*> ev  = Ev $
     \symtab ->
       let (f', symtab') = f symtab
-          (v', symtab'') = v symtab'
-      in (f' v', symtab'')
+          Ev act = fmap f' ev
+      in act symtab'
 
 instance Monad Evaluator where
   (Ev act) >>= k = Ev $
