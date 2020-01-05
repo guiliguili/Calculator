@@ -3,7 +3,7 @@
 ## Overview
 This demonstrates how to implement a simple Calculator with [Haskell][1].
 
-It follows the [Basics of Haskell][2] tutorial.
+It follows the [Basics of Haskell][2] tutorial by [Bartosz Milewski][7] to illustrate how a full blown Haskell project may look like through a concrete and yet simple example. 
 
 ## Building with Haskell Tool Stack
 
@@ -84,8 +84,20 @@ $ stack test
   haskell-calculator> Test suite haskell-calculator-test passed
 ``` 
 
+## Reference
+
+* [Haskell Offical Site][1]
+* [Basics of Haskell][2]
+* [Haskell Tool Stack][3]
+* [Hspec][5]
+* [Learn You a Haskell for Great Good!][6]
+* [Haskell Wiki][8]
+
 [1]: https://www.haskell.org
 [2]: https://www.schoolofhaskell.com/school/starting-with-haskell/basics-of-haskell
 [3]: https://docs.haskellstack.org/
 [4]: ./test/Calculator
 [5]: https://hspec.github.io
+[6]: https://learnyouahaskell.com/
+[7]: https://twitter.com/bartoszmilewski
+[8]: https://wiki.haskell.org/Haskell
