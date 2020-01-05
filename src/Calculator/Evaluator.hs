@@ -11,70 +11,67 @@ import Calculator.Parser
 
 type SymTab = M.Map String Double
 
-newtype Evaluator a = Ev (Either String a)
-
-instance (Show a) => Show (Evaluator a) where
-  show (Ev (Left msg)) = "Error: " ++ msg
-  show (Ev (Right v))  = "Evaluation: " ++ show v
+newtype Evaluator a = Ev (SymTab -> (a, SymTab))
 
 instance Functor Evaluator where
-  fmap f (Ev (Left msg)) = Ev (Left msg)
-  fmap f (Ev (Right v))  = Ev (Right (f v))
+  fmap f (Ev act) = Ev $
+    \symtab ->
+      let (x, symtab') = act symtab
+      in (f x, symtab')
 
 instance Applicative Evaluator where
-  pure v = Ev (Right v)
-
-  Ev (Left msg) <*> _  = Ev (Left msg)
-  Ev (Right f)  <*> m  = fmap f m
+  pure v = Ev $ \symtab -> (v, symtab)
+  (Ev f) <*> (Ev v)  = Ev $
+    \symtab ->
+      let (f', symtab') = f symtab
+          (v', symtab'') = v symtab'
+      in (f' v', symtab'')
 
 instance Monad Evaluator where
-  Ev (Left msg) >>= _ = Ev (Left msg)
-  Ev (Right v)  >>= k = k v
+  (Ev act) >>= k = Ev $
+    \symtab ->
+        let (x, symtab') = act symtab
+            (Ev act') = k x
+        in act' symtab'
+  return x = Ev $ \symtab -> (x, symtab)
 
-  fail msg = Ev (Left msg)
-
-lookUp :: String -> SymTab -> Evaluator (Double, SymTab)
-lookUp str symTab =
+lookUp :: String -> Evaluator Double
+lookUp str = Ev $ \symTab ->
   case M.lookup str symTab of
-    Just v  -> return (v, symTab)
-    Nothing -> fail ("Undefined variable " ++ str)
+    Just v  -> (v, symTab)
+    Nothing -> error $ "Undefined variable " ++ str
 
-addSymbol :: String -> Double -> SymTab -> Evaluator ((), SymTab)
-addSymbol str val symTab =
+addSymbol :: String -> Double -> Evaluator Double
+addSymbol str val = Ev $ \symTab ->
   let symTab' = M.insert str val symTab
-  in return ((), symTab')
+  in (val, symTab')
 
-evaluate :: Tree -> SymTab -> Evaluator (Double, SymTab)
+evaluate :: Tree -> Evaluator Double
 
-evaluate (SumNode op left right) symTab =
-  do
-    (lft, symTab') <- evaluate left symTab
-    (rgt, symTab'') <- evaluate right symTab'
-    case op of
-      Plus  -> return (lft + rgt, symTab'')
-      Minus -> return (lft - rgt, symTab'')
+evaluate (SumNode op left right) = do
+  lft <- evaluate left
+  rgt <- evaluate right
+  case op of
+    Plus  -> return $ lft + rgt
+    Minus -> return $ lft - rgt
 
-evaluate (ProdNode op left right) symTab =
-  do
-    (lft, symTab') <- evaluate left symTab
-    (rgt, symTab'') <- evaluate right symTab'
-    case op of
-      Times -> return (lft * rgt, symTab)
-      Div   -> return (lft / rgt, symTab)
+evaluate (ProdNode op left right) = do
+  lft <- evaluate left
+  rgt <- evaluate right
+  case op of
+    Times -> return $ lft * rgt
+    Div   -> return $ lft / rgt
 
-evaluate (UnaryNode op tree) symTab =
-  do
-    (x, symTab') <- evaluate tree symTab
-    case op of
-      Plus  -> return (x, symTab')
-      Minus -> return (-x, symTab')
+evaluate (UnaryNode op tree) = do
+  x <- evaluate tree
+  case op of
+    Plus  -> return x
+    Minus -> return (-x)
 
-evaluate (NumNode x) symTab = return (x, symTab)
+evaluate (NumNode x) = return x
 
-evaluate (VarNode str) symTab = lookUp str symTab
+evaluate (VarNode str) = lookUp str
 
-evaluate (AssignNode str tree) symTab =
-  do
-    (v, symTab')  <- evaluate tree symTab
-    (_, symTab'') <- addSymbol str v symTab'
-    return (v, symTab'')
+evaluate (AssignNode str tree) = do
+  x <- evaluate tree
+  addSymbol str x

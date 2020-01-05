@@ -17,8 +17,8 @@ When you run the calculator from the command line, it will continuously prompt f
   
 ```bash
 $ stack exec haskell-calculator-exe
-1+2
-3.0
+x1 = -15 / (2 + pi)
+-2.9173839723625705
 ```
 
 ### From REPL
@@ -27,13 +27,42 @@ You can also interactively test lower level function from GHCi as follow :
 
 ```bash
 $ stack ghci
-[...]
-*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> tokenize "1+2"
+-- Run main
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> :main
+x1 = -15 / (2 + pi)
+-2.9173839723625705
+
+-- Tokenize expression 
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> tokenize "x1 = -15 / (2 + pi)"
 [TokNum 1.0,TokOp Plus,TokNum 2.0]
-*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> parse $ tokenize "1+2"
+
+-- Parse tokens
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> parse $ tokenize "x1 = -15 / (2 + pi)"
 SumNode Plus (NumNode 1.0) (NumNode 2.0)
-*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> evaluate (parse $ tokenize "a = 1+2") M.empty
-Evaluation: (3.0,fromList [("a",3.0)])
+
+-- Evaluate expression
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> let (Ev act) = evaluate (parse $ tokenize "x1 = -15 / (2 + pi)")
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> let (val, symTab) = act $ M.fromList [("pi", pi)]
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> val
+-2.9173839723625705
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> symTab
+fromList [("pi",3.141592653589793),("x1",-2.9173839723625705)]
+
+-- Apply Functor
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> let (Ev actMultBy2) = fmap (*2) (Ev act)
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> let (val, symTab) = actMultBy2 $ M.fromList [("pi", pi)]
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> val
+-5.834767944725141
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> symTab
+fromList [("pi",3.141592653589793),("x1",-2.9173839723625705)]
+
+-- Apply Applicative
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> let (Ev actMultBy10) = (pure ( *10 )) <*> (evaluate (parse $ tokenize "x1 = -15 / (2 + pi)"))
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> let (val, symTab) = actMultBy10 $ M.fromList [("pi", pi)]
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> val
+-29.173839723625704
+*Main Calculator.Evaluator Calculator.Lexer Calculator.Parser> symTab 
+fromList [("pi",3.141592653589793),("x1",-2.9173839723625705)]
 ```
 
 ## Testing
